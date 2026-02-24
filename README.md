@@ -63,14 +63,58 @@ npm install
 npm test
 ```
 
-**Track a task:**
+**CLI Usage:**
+
 ```bash
-node src/atlas-tracker.js start "Build X feature" --task-id=uuid
-# ... do work ...
-node src/atlas-tracker.js end uuid --success --duration=45
+# Start tracking a task
+node src/atlas-tracker.js start "Build atlas-tracker.js"
+# Output: 550e8400-e29b-41d4-a716-446655440000
+
+# Update task with tools and files
+node src/atlas-tracker.js update 550e8400... --tools=write,exec --files=src/atlas-tracker.js
+
+# End task with success
+node src/atlas-tracker.js end 550e8400... --success --duration=135
+
+# End task with failure
+node src/atlas-tracker.js end 550e8400... --failure="Missing tests" --quality=incomplete
+
+# Get task details
+node src/atlas-tracker.js get 550e8400...
+
+# List recent tasks
+node src/atlas-tracker.js list --limit=10
 ```
 
-**Search memory before task:**
+**Programmatic Usage:**
+
+```javascript
+const tracker = require('./atlas-tracker');
+
+// Start task
+const taskId = await tracker.startTask('Build X feature', {
+  metadata: { build_number: 19 }
+});
+
+// Update during execution
+await tracker.updateTask(taskId, {
+  tools_used: ['exec', 'write'],
+  files_modified: ['src/x.js']
+});
+
+// End task
+await tracker.endTask(taskId, {
+  success: true,
+  duration_min: 45,
+  outcome_quality: 'complete'
+});
+
+// Query tasks
+const recentTasks = await tracker.getTasks({ limit: 10 });
+const failures = await tracker.getTasks({ success: false });
+```
+
+**Memory Oracle (Phase 1, coming soon):**
 ```bash
 node src/atlas-memory-oracle.js "Build X feature"
 # Returns: prior attempts, failures, relevant patterns
