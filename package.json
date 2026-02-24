@@ -1,0 +1,55 @@
+{
+  "name": "@haythos/atlas",
+  "version": "0.1.0-alpha",
+  "description": "Adaptive Task Learning & Architecture Synthesis - Self-learning execution system for autonomous agents",
+  "main": "src/atlas-tracker.js",
+  "scripts": {
+    "test": "jest --coverage",
+    "test:watch": "jest --watch",
+    "test:ci": "jest --coverage --ci"
+  },
+  "keywords": [
+    "autonomous-agents",
+    "self-learning",
+    "meta-improvement",
+    "execution-tracking",
+    "failure-analysis",
+    "architecture-synthesis"
+  ],
+  "author": "Haythos <haythosvii@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Haythos/atlas.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Haythos/atlas/issues"
+  },
+  "homepage": "https://github.com/Haythos/atlas#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 60,
+        "branches": 60,
+        "functions": 60,
+        "lines": 60
+      }
+    },
+    "coverageReporters": [
+      "text",
+      "text-summary",
+      "json-summary",
+      "lcov"
+    ]
+  }
+}
