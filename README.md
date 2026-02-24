@@ -114,10 +114,72 @@ const recentTasks = await tracker.getTasks({ limit: 10 });
 const failures = await tracker.getTasks({ success: false });
 ```
 
-**Memory Oracle (Phase 1, coming soon):**
+**Memory Oracle:**
+
 ```bash
+# Search for relevant context before starting a task
 node src/atlas-memory-oracle.js "Build X feature"
-# Returns: prior attempts, failures, relevant patterns
+
+# Compact output (quote-style, less verbose)
+node src/atlas-memory-oracle.js "testing strategy" --compact
+
+# JSON output (for programmatic use)
+node src/atlas-memory-oracle.js "CI/CD pipeline" --json
+
+# Limit results per file
+node src/atlas-memory-oracle.js "test coverage" --max-results=3
+
+# Customize context lines
+node src/atlas-memory-oracle.js "build system" --context-lines=5
+
+# Hide context snippets (just show matches)
+node src/atlas-memory-oracle.js "deployment" --no-context
+```
+
+**Example Output:**
+```
+# Memory Oracle Results
+
+**Query:** testing strategy
+**Timestamp:** 2026-02-24T04:07:42.171Z
+
+## Summary
+- **Total Matches:** 20
+- **Files Searched:** 4
+- **Prior Attempts:** 9
+- **Failures:** 5
+- **Successes:** 6
+
+## Relevant Context
+
+### MEMORY.md:43 (score: 14)
+> ### Testing Strategy (Builds 011-013)
+
+### DEVLOG.md:268 (score: 2)
+> - Testing requirements (60% coverage minimum)
+```
+
+**Programmatic Usage:**
+
+```javascript
+const oracle = require('./atlas-memory-oracle');
+
+// Search for relevant context
+const results = await oracle.searchContext('Build X feature', {
+  maxResults: 5,
+  contextLines: 3
+});
+
+console.log(`Found ${results.summary.total_matches} matches`);
+console.log(`Prior attempts: ${results.summary.prior_attempts}`);
+console.log(`Failures: ${results.summary.failures}`);
+console.log(`Successes: ${results.summary.successes}`);
+
+// Format as markdown
+const markdown = oracle.formatResults(results);
+
+// Format as JSON
+const json = oracle.formatJSON(results);
 ```
 
 ---
