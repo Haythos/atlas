@@ -26,18 +26,8 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Run tests with coverage
-      run: npm test -- --ci --maxWorkers=2
-    
-    - name: Display coverage summary
-      if: always()
-      run: |
-        if [ -f coverage/coverage-summary.json ]; then
-          echo "Coverage summary:"
-          cat coverage/coverage-summary.json
-        else
-          echo "No coverage summary found"
-        fi
+    - name: Run tests
+      run: npm test -- --ci --maxWorkers=2 --verbose
     
     - name: Upload coverage to Codecov (optional)
       if: matrix.node-version == '22.x'
