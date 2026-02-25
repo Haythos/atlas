@@ -4,28 +4,36 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const execAsync = promisify(exec);
-const TEST_LOG_PATH = path.join(__dirname, '../data/test_cli_executions.jsonl');
 const CLI_PATH = path.join(__dirname, '../src/atlas-tracker.js');
 
 describe('ATLAS Tracker CLI', () => {
+  let testLogPath;
+
   beforeEach(async () => {
-    // Clean up test log
+    // Use unique log file per test to avoid parallel execution conflicts
+    testLogPath = path.join(__dirname, `../data/test_cli_${Date.now()}_${Math.random().toString(36).substr(2, 9)}.jsonl`);
+    
+    // Clean up if exists (shouldn't, but just in case)
     try {
-      await fs.unlink(TEST_LOG_PATH);
+      await fs.unlink(testLogPath);
     } catch (err) {
       // Ignore
     }
-    // Set environment variable to use test log path
-    process.env.ATLAS_LOG_PATH = TEST_LOG_PATH;
+    
+    // Set environment variable to use unique test log path
+    process.env.ATLAS_LOG_PATH = testLogPath;
+  });
+
+  afterEach(async () => {
+    // Clean up test log after each test
+    try {
+      await fs.unlink(testLogPath);
+    } catch (err) {
+      // Ignore
+    }
   });
 
   afterAll(async () => {
-    // Clean up
-    try {
-      await fs.unlink(TEST_LOG_PATH);
-    } catch (err) {
-      // Ignore
-    }
     delete process.env.ATLAS_LOG_PATH;
   });
 
