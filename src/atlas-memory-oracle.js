@@ -288,7 +288,11 @@ async function cli() {
   const contextLines = parseInt(args.find(a => a.startsWith('--context-lines='))?.split('=')[1]) || 3;
 
   try {
-    const results = await searchContext(query, { maxResults, contextLines });
+    const results = await searchContext(query, { 
+      maxResults, 
+      contextLines,
+      workspaceRoot: process.cwd() // Use current working directory in CLI mode
+    });
 
     if (jsonOutput) {
       console.log(formatJSON(results));
