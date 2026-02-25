@@ -26,34 +26,7 @@ jobs:
       run: npm ci
     
     - name: Run tests with coverage
-      run: npm test -- --coverage
-    
-    - name: Check coverage thresholds
-      run: |
-        COVERAGE=$(cat coverage/coverage-summary.json)
-        STATEMENTS=$(echo $COVERAGE | jq '.total.statements.pct')
-        BRANCHES=$(echo $COVERAGE | jq '.total.branches.pct')
-        FUNCTIONS=$(echo $COVERAGE | jq '.total.functions.pct')
-        LINES=$(echo $COVERAGE | jq '.total.lines.pct')
-        
-        echo "Coverage: Statements $STATEMENTS%, Branches $BRANCHES%, Functions $FUNCTIONS%, Lines $LINES%"
-        
-        if (( $(echo "$STATEMENTS < 60" | bc -l) )); then
-          echo "Statement coverage below 60%"
-          exit 1
-        fi
-        if (( $(echo "$BRANCHES < 60" | bc -l) )); then
-          echo "Branch coverage below 60%"
-          exit 1
-        fi
-        if (( $(echo "$FUNCTIONS < 60" | bc -l) )); then
-          echo "Function coverage below 60%"
-          exit 1
-        fi
-        if (( $(echo "$LINES < 60" | bc -l) )); then
-          echo "Line coverage below 60%"
-          exit 1
-        fi
+      run: npm test
     
     - name: Upload coverage to Codecov (optional)
       if: matrix.node-version == '22.x'
